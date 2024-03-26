@@ -43,6 +43,7 @@ public class RangeTest {
     @Test
     public void rangeConstructorLowerGreaterThanUpperThrowsException() {
     	thrown.expect(IllegalArgumentException.class);
+    	thrown.expectMessage("Range(double, double): require lower (5.0) <= upper (2.0).");
         Range expectedRange = new Range(5.0, 2.0);
     }
     
@@ -441,6 +442,12 @@ public class RangeTest {
     	assertEquals("The toString method should return 'Range[<lower>,<upper>]",
     			"Range[10.0,20.0]", posPosRange.toString());
     }
+    
+    @Test
+    public void toStringReturnsCorrectStringAgain() {
+    	assertEquals("The toString method should return 'Range[<lower>,<upper>]",
+    			"Range[10.0,20.0]", posPosRange.toString());
+    }
    
     // hashCode() TESTS
     // #1
@@ -700,6 +707,107 @@ public class RangeTest {
     public void isNaNRangeNoNaN() {
     	Range range1 = new Range(0.0, 0.0);
     	assertEquals("Range[0.0, 0.0] should return isNanRange() == False", false, range1.isNaNRange());
+    }
+    
+    // MUTATION TESTS
+    
+    @Test
+    public void containsWithOneValue() {
+    	Range range1 = new Range(0.0, 0.0);
+    	assertEquals("Range[0.0, 0.0] should return contains(0.0) == True", true, range1.contains(0.0));
+    }
+    
+    @Test
+    public void containsWithOneValueOutsideRange() {
+    	Range range1 = new Range(0.0, 0.0);
+    	assertEquals("Range[0.0, 0.0] should return contains(0.1) == False", false, range1.contains(0.1));
+    }
+    
+    @Test
+    public void intersectsWithSmallRange() {
+    	Range range1 = new Range(0.0,0.1);
+    	assertEquals("Range[0.0, 0.1] should return intersects(0.0,0.1) == True", true, range1.intersects(0.0, 0.1));
+    }
+    
+    @Test
+    public void intersectsWithZeroRangeIsFalse() {
+    	Range range1 = new Range(0.0,0.1);
+    	assertEquals("Range[0.0, 0.1] should return intersects(0.0,0.1) == false", false, range1.intersects(0.0, 0.0));
+    }
+    
+    @Test
+    public void intersectsWithLowerEqualToUpper() {
+    	Range range1 = new Range(0.0,5);
+    	assertEquals("Range[0.0, 5] should return intersects(5,6) == false", false, range1.intersects(5.0, 6.0));
+    }
+    
+    @Test
+    public void intersectsWithLowerSmallerThanUpper() {
+    	Range range1 = new Range(0.0,5);
+    	assertEquals("Range[0.0, 5] should return intersects(4.9,5.1) == true", true, range1.intersects(4.9, 5.1));
+    }
+    
+    @Test
+    public void scaleByPositiveFactorOfHalf() {
+    	Range actualRange = new Range(0.0, 10.0);
+    	Range expectedRange = new Range(0.0, 5.0);
+    	assertEquals("scale(Range[0,10], 0.5) should return Range[0,5]", expectedRange, Range.scale(actualRange, 0.5));
+    }
+    
+    @Test
+    public void scaleByNegativeFactorGreaterThanOneThrowsError() {
+    	Range actualRange = new Range(0.0, 10.0);
+    	thrown.expect(IllegalArgumentException.class);
+    	Range.scale(actualRange, -1.5);
+    }
+    
+    @Test
+    public void scaleByNegativeFactorLessThanOneThrowsError() {
+    	Range actualRange = new Range(0.0, 10.0);
+    	thrown.expect(IllegalArgumentException.class);
+    	Range.scale(actualRange, -0.5);
+    }
+    
+    @Test
+    public void scaleByAllPositiveValues() {
+    	Range actualRange = new Range(50.0, 100.0);
+    	Range expectedRange = new Range(100.0, 200.0);
+    	assertEquals("scale(Range[50,100], 2) should return Range[100,200]", expectedRange, Range.scale(actualRange,2));
+    }
+    @Test
+    public void intersectsWithRangeIsFlase() {
+    	Range range1 = new Range(0.0,5.0);
+    	Range range2 = new Range(5.0,6.0);
+    	assertEquals("Range[0.0, 5.0] should return intersects(Range[5.0,6.0]) == false", false, range1.intersects(range2));
+    }
+    
+    @Test
+    public void shiftWithNoZeroCrossingFromNegativeToNegative() {
+    	
+    	Range actualRange = new Range(-5.0, -1.0);
+    	Range expectedRange = new Range(-2.0, 0.0);
+    	assertEquals("Should shift from -5 to -2", expectedRange, Range.shift(actualRange, 3));
+    }
+    
+    @Test
+    public void shiftWithNoZeroCrossingFromNegativeToPositive() {
+    	
+    	Range actualRange = new Range(-5, -1);
+    	Range expectedRange = new Range(0.0,0.0);
+    	assertEquals("Should shift from -5 to 0", expectedRange, Range.shift(actualRange, 6));
+    }
+    
+    
+    @Test
+    public void hashCodeIsCorrect(){
+    	Range range1 = new Range(5.0,50.0);
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(5.0);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(50.0);
+        result = 29 * result + (int) (temp ^ (temp >>> 32));
+        assertEquals(result, range1.hashCode());
     }
     
     @After
