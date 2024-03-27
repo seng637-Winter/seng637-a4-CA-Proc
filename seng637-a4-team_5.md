@@ -224,15 +224,35 @@ Since our original test cases killed ~70% of mutants, we will examine 7 killed m
 
 # Report all the statistics and the mutation score for each test class
 
-Initial Mutation Score of Range Tests:
+|Test Class|Initial Mutation Score| Final Mutation Score| Improvement|
+|-----| -----| -----| -----|
+|Range| 68%| 78%| 10%|
+|DataUtilities| 90%| 91%| 1%|
 
-Initial Mutation Score of DataUtilities Tests:
+### Screenshots
+![Original Range Score](./media/Screenshots/Range_Before.PNG)
+![Final Range Score](./media/Screenshots/Range_After.PNG)
+![Original Data Utilities Score](./media/Screenshots/DataUtilities_Before.PNG)
+![Final Data Utilities Score](./media/Screenshots/DataUtilities_After.PNG)
+
 
 # Analysis drawn on the effectiveness of each of the test classes
 
+Our tests for the Range class started with a mutation coverage of 68%, and achieved a final mutation coverage score of 78%. While this met the requirements of the assignment by improving the score by 10%, an analysis of the surviving mutants shows us that there are still more test-cases that we could write to improve it further. This fits with the results from our previous assignment, where we discussed the differences between code coverage and testing for equivalence classes and boundary value testing. Our tests for assignment 3 were written for code coverage, but did not necessarily capture all of the boundary conditions. These boundary conditions often overlap with issues captured by the mutation testing.
+
+Our tests for the DataUtilities class started with a mutation coverage of 90%, and achieved a final mutation score of 91%. An analyis of the remaining mutants showed that nearly all of them were equivalent mutants, and no further improvement is possible through writing test cases. The DataUtilities class is considered as effective as it could possibly be from the standpoing of mutation testing. 
+
 # A discussion on the effect of equivalent mutants on mutation score accuracy
 
+Equivalent mutants are one of the main issues with mutation testing. They are difficult or impossible to detect automatically, and require analysis of both the code and mutation in order to identify. This means that there is a strict, but unknown, upper limit to the mutation coverage score that is achievable for any particular class. We saw this in DataUtilities, as nearly all of the remaining mutants are equivalent. Examples of this include postfix incrementation of local variables, or equivalent conditionals on loops (i < 10) is equivalent to (i != 10) for example.
+
+Scores for mutation coverage are therefore not strictly comparable across classes, which may have different amounts of equivalent mutants. Mutation coverage scores should be used only as a benchmark reference for improving tests within a single class. 
+
 # A discussion of what could have been done to improve the mutation score of the test suites
+
+For the Range class, we could continue to write test cases focusing on mutations which primarily effect the boundary values, positive/negative switching, and arithmetic faults. There is likely room to improve the coverage by another 5-10% .
+
+For the DataUtilities class, the only option left for improving the mutation score would be to refactor the code itself, to remove or modify statements which generate equivalent mutants but do not change the outcome of the code. For example, mutation testing found some methods such as clone(), which checks for null data before copying rows. However, this check for null data turns out to be redundant, as the method produces the same output regardless of if a row is null or not. This check could therefore simply be removed, or the code modified to act differently on a null value.   
 
 # Why do we need mutation testing? Advantages and disadvantages of mutation testing
 
@@ -240,7 +260,7 @@ By introducing small alterations to the source code, mutation testing evaluates 
 
 One advantage of mutation testing is its ability to identify redundant or ineffective test cases, leading to more efficient testing strategies. Additionally, it promotes a deeper understanding of the codebase and encourages developers to write more resilient tests.
 
-A disadvantage of mutation testing is that it can be computationally intensive and time-consuming, especially for large codebases, which may deter its widespread adoption.
+A disadvantage of mutation testing is that it can be computationally intensive and time-consuming, especially for large codebases, which may deter its widespread adoption. It also brings the problem of equivalent mutants, which are difficult to detect automatically, and require time and effort by the tester to identify and ignore.
 
 # Explain your SELENUIM test case design process
 
@@ -263,7 +283,7 @@ In designing each test case, the team performed each of the functionalities on t
 
 Assertions were used in each test case to ensure the expected result occured for each test. Various types of assertions were used. For example, when updating the quantity of items in the cart, assert text was used to ensure the change had been reflected in the checkout price. A different example would be for when a user signs in, assert title was used to ensure the user was directed to the appropriate next page.
 
-# how did you test each functionaity with different test data
+# How did you test each functionality with different test data
 
 Each functionality was tested with various test data to ensure a certain degree of robustness when possible. Examples of this include creating tests to asses the result of both valid login credentials and invalid credentials. Another example for the search function was to test a valid product which returns many results as well as incoherent text which should be expected to return 0 results.
 
