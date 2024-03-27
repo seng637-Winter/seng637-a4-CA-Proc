@@ -244,9 +244,11 @@ Our tests for the DataUtilities class started with a mutation coverage of 90%, a
 
 # A discussion on the effect of equivalent mutants on mutation score accuracy
 
-Equivalent mutants are one of the main issues with mutation testing. They are difficult or impossible to detect automatically, and require analysis of both the code and mutation in order to identify. This means that there is a strict, but unknown, upper limit to the mutation coverage score that is achievable for any particular class. We saw this in DataUtilities, as nearly all of the remaining mutants are equivalent. Examples of this include postfix incrementation of local variables, or equivalent conditionals on loops (i < 10) is equivalent to (i != 10) for example.
+Equivalent mutants are one of the main issues with mutation testing. They are difficult or impossible to detect automatically, and require analysis of both the code and mutation by the tester in order to identify. This means that there is a strict, but unknown, upper limit to the mutation coverage score that is achievable for any particular class. We saw this in DataUtilities, as nearly all of the remaining mutants are equivalent. Examples of this include postfix incrementation of local variables, or equivalent conditionals on loops (i < 10) is equivalent to (i != 10) for example. 
 
 Scores for mutation coverage are therefore not strictly comparable across classes, which may have different amounts of equivalent mutants. Mutation coverage scores should be used only as a benchmark reference for improving tests within a single class. 
+
+When working on our analysis, we found it helpful to identify the type of mutation that was applied - some tended to create many more equivalent mutants. Mutators such as post-fix increment and decrement tended to make up the bulk of our equivalent classes, because many of our methods are short helper functions, which only use a local variable once before returning. It may therefore be helpful to turn this individual class of mutators off for testing classes like ours.
 
 # A discussion of what could have been done to improve the mutation score of the test suites
 
