@@ -252,7 +252,7 @@ Scores for mutation coverage are therefore not strictly comparable across classe
 
 For the Range class, we could continue to write test cases focusing on mutations which primarily effect the boundary values, positive/negative switching, and arithmetic faults. There is likely room to improve the coverage by another 5-10% .
 
-For the DataUtilities class, the only option left for improving the mutation score would be to refactor the code itself, to remove or modify statements which generate equivalent mutants but do not change the outcome of the code. For example, mutation testing found some methods such as clone(), which checks for null data before copying rows. However, this check for null data turns out to be redundant, as the method produces the same output regardless of if a row is null or not. This check could therefore simply be removed, or the code modified to act differently on a null value.   
+For the DataUtilities class, the only option left for improving the mutation score would be to refactor the code itself, to remove or modify statements which generate equivalent mutants but do not change the outcome of the code. For example, mutation testing found some methods produce surviving mutants, like clone(), which checks for null data before copying rows. However, this check for null data turns out to be redundant, as the method produces the same output regardless of if a row is null or not. This check could therefore simply be removed, or the code modified to act differently on a null value.   
 
 # Why do we need mutation testing? Advantages and disadvantages of mutation testing
 
@@ -262,7 +262,7 @@ One advantage of mutation testing is its ability to identify redundant or ineffe
 
 A disadvantage of mutation testing is that it can be computationally intensive and time-consuming, especially for large codebases, which may deter its widespread adoption. It also brings the problem of equivalent mutants, which are difficult to detect automatically, and require time and effort by the tester to identify and ignore.
 
-# Explain your SELENUIM test case design process
+# Explain your SELENIUM test case design process
 
 Test cases were written to assess unique functionalities of the SUT (Shop Smart Canada Website). Some of the core functionalities examined were:
 - User Profile Functionality
@@ -278,6 +278,8 @@ Test cases were written to assess unique functionalities of the SUT (Shop Smart 
 For each of these functionalities, various tests were designed to ensure the GUI responded to events appropriately. 
 
 In designing each test case, the team performed each of the functionalities on the SUT to gain an understanding of expected behaviour. Once this exploration was complete, functionalities were split into numerous tests which allowed for better error tracking and readability of test cases (For example, the shopping functionality, which consists of adding a product to a cart, updating the quantity of items in the cart, then proceding to checkout was split into 3 tests).
+
+![Selenium Tests](./media/Screenshots/GUITesting.png)
 
 # Explain the use of assertions and checkpoints
 
@@ -302,3 +304,5 @@ One of the challenges encountered during the GUI testing was due to the asynchro
 
 # Comments/feedback on the assignment itself
 The GUI testing portion of this lab provided a great opportunity to write tests for common user interfaces, and learn how tools like Selenium may be used to automate tests for a large, professional website with many functionalities.
+
+For the mutant testing, once again we had issues with building upon previously completed tests - primarily due to the different dependency versions that were provided in the previous assignments. For example, for Assignment 4, we needed to include the hamcrest .jar files from both A2 and A3, as they have different versions and include some different functions. This is true for a number of other dependencies. It may be of use to update the course material to provide common versions of the libraries for all of the assignments.
