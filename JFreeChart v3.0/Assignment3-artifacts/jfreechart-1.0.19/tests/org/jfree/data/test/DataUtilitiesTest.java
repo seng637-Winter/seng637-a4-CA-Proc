@@ -533,6 +533,7 @@ public class DataUtilitiesTest extends DataUtilities {
     	assertFalse("Should return false", DataUtilities.equal(arr1, arr2));
     	assertFalse("Should return false", DataUtilities.equal(arr2, arr1));
     	assertFalse("Should return false", DataUtilities.equal(arr3, arr1));
+    	assertFalse("Should return false", DataUtilities.equal(arr1, arr3));
     }
     
     @Test
@@ -543,6 +544,7 @@ public class DataUtilitiesTest extends DataUtilities {
     	assertFalse("Should return false", DataUtilities.equal(arr1, arr2));
     	assertFalse("Should return false", DataUtilities.equal(arr2, arr1));
     	assertFalse("Should return false", DataUtilities.equal(arr3, arr1));
+    	assertFalse("Should return flase", DataUtilities.equal(arr2,  arr3));
     }
     
     @Test 
@@ -820,7 +822,93 @@ public class DataUtilitiesTest extends DataUtilities {
     		        6, DataUtilities.calculateRowTotal(threeByTwoValues2D, 2, cols1), .000000001d);
     }
     
-
+    // MUTATION TESTS
+    
+    @Test
+    public void testEqualWithFirstNull() {
+    	double[][] arr = {{1,2},{3,4}};
+    	assertFalse("Should return false", DataUtilities.equal(null, arr));
+    	
+    }
+    
+    @Test
+    public void testEqualWithSecondNull() {
+    	double[][] arr = {{1,2},{3,4}};
+    	assertFalse("Should return false", DataUtilities.equal(arr, null));
+    }
+    
+    @Test
+    public void calculateColumnTotalWithValidRowsCol0Equals21() {
+    	org.jmock.Mockery Values2DMock= new Mockery();
+    	final Values2D twoByThreeValues2D = Values2DMock.mock(Values2D.class);
+        Values2DMock.checking(new org.jmock.Expectations()
+        {{
+        	atLeast(1).of(twoByThreeValues2D).getRowCount();
+            will(returnValue((6))); 
+            
+            atLeast(1).of(twoByThreeValues2D).getColumnCount();
+            will(returnValue((1))); 
+            
+            atLeast(1).of(twoByThreeValues2D).getValue(0, 0);
+	        will(returnValue((1))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(1, 0);
+	        will(returnValue((2))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(2, 0);
+	        will(returnValue((3))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(3, 0);
+	        will(returnValue((4))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(4, 0);
+	        will(returnValue((5))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(5, 0);
+	        will(returnValue((6))); 
+        }});
+        
+        int[] rows = {0,1,2,3,4,5};
+    	assertEquals("The sum of column 0 should return 21",
+    		        21, DataUtilities.calculateColumnTotal(twoByThreeValues2D, 0, rows), .000000001d);
+    }
+    
+    @Test
+    public void calculateRowTotalWithValidRowsCol0Equals21() {
+    	org.jmock.Mockery Values2DMock= new Mockery();
+    	final Values2D twoByThreeValues2D = Values2DMock.mock(Values2D.class);
+        Values2DMock.checking(new org.jmock.Expectations()
+        {{
+        	atLeast(1).of(twoByThreeValues2D).getRowCount();
+            will(returnValue((1))); 
+            
+            atLeast(1).of(twoByThreeValues2D).getColumnCount();
+            will(returnValue((6))); 
+            
+            atLeast(1).of(twoByThreeValues2D).getValue(0, 0);
+	        will(returnValue((1))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(0, 1);
+	        will(returnValue((2))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(0, 2);
+	        will(returnValue((3))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(0, 3);
+	        will(returnValue((4))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(0, 4);
+	        will(returnValue((5))); 
+	        
+	        atLeast(1).of(twoByThreeValues2D).getValue(0, 5);
+	        will(returnValue((6))); 
+        }});
+        
+        int[] cols = {0,1,2,3,4,5};
+    	assertEquals("The sum of column 0 should return 21",
+    		        21, DataUtilities.calculateRowTotal(twoByThreeValues2D, 0, cols), .000000001d);
+    }
+    
     @After
     public void tearDown() throws Exception {
     }
